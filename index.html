@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MGSA Programme Governance Dashboard (Fictional) — Independent Portfolio Exercise</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1B3A5C;--blue:#2E75B6;--purple:#5C3A7A;--teal:#0D6E6E;
+  --text:#1A1A1A;--text2:#595959;--border:#CCCCCC;
+  --bg:#F8F9FA;--bg2:#F2F2F2;
+  --rf:#F4CCCC;--rt:#A61C00;
+  --of:#FCE4D6;--ot:#C55A11;
+  --af:#FFF3CD;--at:#9C6500;
+  --gf:#D9EAD3;--gt:#1E6B3C;
+  --bf:#D6E4F0;--bt:#1B3A5C;
+  --pf:#EDE4F5;--pt:#5C3A7A;
+}
+body{font-family:Arial,Helvetica,sans-serif;font-size:14px;color:var(--text);background:#fff}
+.pg-hdr{background:var(--navy);display:flex;flex-direction:column}
+.hdr-top{display:flex;justify-content:space-between;align-items:center;padding:14px 24px 0}
+.hdr-org{font-size:11px;font-weight:700;color:rgba(255,255,255,.65);letter-spacing:.1em;text-transform:uppercase}
+.hdr-ref{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.04em}
+.hdr-main{padding:12px 24px 0}
+.hdr-title{font-size:26px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.hdr-sub{font-size:13px;color:rgba(255,255,255,.65);margin-top:4px}
+.tab-radios{display:none}
+.tab-bar{display:flex;padding:0 24px;gap:0;overflow-x:auto;margin-top:12px}
+.tab{padding:12px 20px;font-size:13px;font-weight:700;cursor:pointer;color:rgba(255,255,255,.5);border-bottom:3px solid transparent;white-space:nowrap;font-family:Arial,Helvetica,sans-serif;transition:color .15s,border-color .15s;user-select:none}
+.tab:hover{color:rgba(255,255,255,.85)}
+.panel{display:none;padding:24px}
+#t1:checked ~ .pg-hdr .tab[for="t1"],
+#t2:checked ~ .pg-hdr .tab[for="t2"],
+#t3:checked ~ .pg-hdr .tab[for="t3"],
+#t4:checked ~ .pg-hdr .tab[for="t4"],
+#t5:checked ~ .pg-hdr .tab[for="t5"],
+#t6:checked ~ .pg-hdr .tab[for="t6"],
+#t7:checked ~ .pg-hdr .tab[for="t7"]
+{color:#fff;border-bottom-color:rgba(255,255,255,.9)}
+#t1:checked ~ #p1,
+#t2:checked ~ #p2,
+#t3:checked ~ #p3,
+#t4:checked ~ #p4,
+#t5:checked ~ #p5,
+#t6:checked ~ #p6,
+#t7:checked ~ #p7
+{display:block}
+.mrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:20px}
+.mc{background:var(--bg);border:.5px solid var(--border);border-radius:6px;padding:14px 16px}
+.ml{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text2);margin-bottom:4px}
+.mv{font-size:24px;font-weight:700}
+.ms{font-size:11px;color:var(--text2);margin-top:3px}
+.st{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--navy);margin-bottom:10px}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:3px;white-space:nowrap}
+.bc{background:var(--rf);color:var(--rt)}
+.bh{background:var(--of);color:var(--ot)}
+.bm{background:var(--af);color:var(--at)}
+.bg{background:var(--gf);color:var(--gt)}
+.bp{background:var(--bf);color:var(--bt)}
+.bpu{background:var(--pf);color:var(--pt)}
+.tw{overflow-x:auto;border:.5px solid var(--border);border-radius:6px;margin-bottom:16px}
+.tw.sh{max-height:460px;overflow-y:auto}
+.dt{width:100%;border-collapse:collapse;font-size:12px}
+.dt th{background:var(--navy);color:#fff;padding:9px 10px;font-weight:700;font-size:11px;text-align:left;position:sticky;top:0;z-index:2;white-space:nowrap;letter-spacing:.05em;text-transform:uppercase}
+.dt td{padding:8px 10px;border-bottom:.5px solid var(--border);vertical-align:top}
+.dt tr:last-child td{border-bottom:none}
+.dt tr:hover td{background:var(--bg2)}
+.dt td.ctr{text-align:center;vertical-align:middle}
+.dt td.num{text-align:right;font-variant-numeric:tabular-nums;vertical-align:middle}
+.dt td.mid{vertical-align:middle}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.cg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+.cb{background:var(--bg);border:.5px solid var(--border);border-radius:6px;padding:14px;margin-bottom:16px}
+.cb0{background:var(--bg);border:.5px solid var(--border);border-radius:6px;padding:14px;margin-bottom:0}
+.card{background:#fff;border:.5px solid var(--border);border-left:4px solid;border-radius:6px;padding:12px 14px;margin-bottom:10px}
+.card:last-child{margin-bottom:0}
+.card-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px}
+.card-title{font-size:13px;font-weight:700;flex:1}
+.card-sub{font-size:12px;color:var(--text2);line-height:1.55}
+.cbar-wrap{margin-bottom:9px}
+.cbar-wrap:last-child{margin-bottom:0}
+.cbar-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px}
+.cbar{height:12px;background:var(--bg2);border-radius:3px;overflow:hidden}
+.cbar-fill{height:100%;border-radius:3px}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:.5px solid var(--border);font-size:12px}
+.stat-row:last-child{border-bottom:none}
+.stat-label{color:var(--text2);flex:1;padding-right:8px}
+.stat-val{font-weight:700;text-align:right;flex-shrink:0}
+.notice{border:.5px solid;border-radius:6px;padding:11px 13px;margin-bottom:10px;font-size:12px;line-height:1.6}
+.notice:last-child{margin-bottom:0}
+.notice-r{background:var(--rf);border-color:#E24B4A;color:var(--rt)}
+.notice-a{background:var(--of);border-color:#EF9F27;color:var(--ot)}
+.notice-g{background:var(--gf);border-color:#4CAF50;color:var(--gt)}
+.notice-b{background:var(--bf);border-color:var(--blue);color:var(--bt)}
+.notice-p{background:var(--pf);border-color:var(--purple);color:var(--pt)}
+.rag{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle;flex-shrink:0}
+.rag-r{background:#E24B4A}
+.rag-a{background:#EF9F27}
+.rag-g{background:#4CAF50}
+.rag-b{background:#2E75B6}
+.rag-p{background:#5C3A7A}
+.v-g{color:var(--gt);font-weight:700}
+.v-a{color:var(--at);font-weight:700}
+.v-r{color:var(--rt);font-weight:700}
+.v-b{color:var(--bt);font-weight:700}
+.funnel{display:flex;flex-direction:column;gap:6px}
+.funnel-tier{border-radius:4px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
+.funnel-label{font-size:12px;font-weight:700}
+.funnel-count{font-size:20px;font-weight:700}
+.funnel-sub{font-size:11px;opacity:.8}
+.ft-1{background:var(--rf);color:var(--rt)}
+.ft-2{background:var(--of);color:var(--ot)}
+.ft-3{background:var(--af);color:var(--at)}
+.ft-4{background:var(--gf);color:var(--gt)}
+.ft-5{background:var(--bf);color:var(--bt)}
+.tl{position:relative;padding-left:22px}
+.tl::before{content:'';position:absolute;left:4px;top:6px;bottom:6px;width:2px;background:var(--border)}
+.tl-item{position:relative;margin-bottom:14px;padding-bottom:14px;border-bottom:.5px solid var(--border)}
+.tl-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.tl-dot{position:absolute;left:-18px;top:3px;width:12px;height:12px;border-radius:50%;border:2px solid #fff}
+.tl-time{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.tl-actor{font-size:11px;color:var(--blue);font-weight:700;margin-bottom:2px}
+.tl-title{font-size:12px;font-weight:700;margin-bottom:2px}
+.tl-desc{font-size:12px;color:var(--text2);line-height:1.5}
+.breach-pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;white-space:nowrap}
+.breach-r{background:var(--rt);color:#fff}
+.breach-a{background:var(--ot);color:#fff}
+.breach-g{background:var(--gt);color:#fff}
+.act-row{display:flex;gap:10px;padding:9px 0;border-bottom:.5px solid var(--border);font-size:12px;align-items:flex-start}
+.act-row:last-child{border-bottom:none}
+.act-ref{min-width:72px;font-weight:700;flex-shrink:0;color:var(--navy)}
+.act-body{flex:1}
+.act-title{font-weight:700;margin-bottom:2px}
+.act-desc{color:var(--text2);line-height:1.5}
+.act-meta{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap}
+.raci-g{background:var(--gf);color:var(--gt);font-weight:700;text-align:center;padding:6px;border:.5px solid var(--border);font-size:11px}
+.raci-b{background:var(--bf);color:var(--bt);font-weight:700;text-align:center;padding:6px;border:.5px solid var(--border);font-size:11px}
+.raci-a{background:var(--af);color:var(--at);font-weight:700;text-align:center;padding:6px;border:.5px solid var(--border);font-size:11px}
+.raci-n{background:var(--bg2);color:var(--text2);text-align:center;padding:6px;border:.5px solid var(--border);font-size:11px}
+.raci-hdr{background:var(--navy);color:#fff;font-size:11px;font-weight:700;text-align:center;padding:8px 6px;border:.5px solid var(--border);letter-spacing:.04em;white-space:nowrap}
+.raci-lbl{background:var(--bg);font-size:12px;font-weight:700;padding:8px 10px;border:.5px solid var(--border);vertical-align:middle}
+.raci-table{width:100%;border-collapse:collapse}
+p.intro{font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6}
+.gate-strip{background:#fff;border:.5px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:16px}
+.gate-hdr{display:grid;grid-template-columns:70px 160px 90px 1fr 90px 90px 80px 90px;background:var(--navy);padding:8px 10px;gap:0}
+.gate-hdr span{font-size:11px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.05em}
+.gate-row{display:grid;grid-template-columns:70px 160px 90px 1fr 90px 90px 80px 90px;padding:8px 10px;border-bottom:.5px solid var(--border);font-size:12px;align-items:center;gap:0}
+.gate-row:last-child{border-bottom:none}
+.gate-row:hover{background:var(--bg2)}
+.gate-id{font-weight:700;color:var(--navy);font-size:11px}
+.gate-prog{font-weight:700}
+.gate-phase{font-size:11px;color:var(--text2)}
+.gate-desc{line-height:1.4;padding:0 8px}
+.gate-ctr{text-align:center}
+.gate-num{text-align:right;font-variant-numeric:tabular-nums;padding-right:6px}
+.cr-strip{background:#fff;border:.5px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:16px}
+.cr-hdr{display:grid;grid-template-columns:80px 160px 80px 1fr 90px 90px 90px;background:var(--navy);padding:8px 10px;gap:0}
+.cr-hdr span{font-size:11px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.05em}
+.cr-row{display:grid;grid-template-columns:80px 160px 80px 1fr 90px 90px 90px;padding:8px 10px;border-bottom:.5px solid var(--border);font-size:12px;align-items:start;gap:0}
+.cr-row:last-child{border-bottom:none}
+.cr-row:hover{background:var(--bg2)}
+.cr-ref{font-weight:700;color:var(--navy);font-size:11px}
+.cr-prog{font-weight:700;font-size:11px}
+.cr-type{font-size:11px;color:var(--text2)}
+.cr-desc{line-height:1.5;padding:0 8px}
+.cr-ctr{text-align:center}
+.cr-num{text-align:right;padding-right:6px;font-variant-numeric:tabular-nums}
+.iss-strip{background:#fff;border:.5px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:16px}
+.iss-hdr{display:grid;grid-template-columns:80px 90px 160px 1fr 100px 80px 90px;background:var(--navy);padding:8px 10px;gap:0}
+.iss-hdr span{font-size:11px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.05em}
+.iss-row{display:grid;grid-template-columns:80px 90px 160px 1fr 100px 80px 90px;padding:8px 10px;border-bottom:.5px solid var(--border);font-size:12px;align-items:start;gap:0}
+.iss-row:last-child{border-bottom:none}
+.iss-row:hover{background:var(--bg2)}
+.iss-ref{font-weight:700;color:var(--navy);font-size:11px}
+.iss-sev{text-align:center}
+.iss-prog{font-weight:700;font-size:11px}
+.iss-desc{line-height:1.5;padding:0 8px}
+.iss-owner{font-size:11px;font-weight:700;padding-right:4px}
+.iss-due{font-size:11px;color:var(--text2);text-align:right;padding-right:6px}
+.iss-stat{text-align:right}
+.risk-strip{background:#fff;border:.5px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:16px}
+.risk-hdr{display:grid;grid-template-columns:80px 90px 150px 1fr 80px 80px 100px 90px;background:var(--navy);padding:8px 10px;gap:0}
+.risk-hdr span{font-size:11px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.05em}
+.risk-row{display:grid;grid-template-columns:80px 90px 150px 1fr 80px 80px 100px 90px;padding:8px 10px;border-bottom:.5px solid var(--border);font-size:12px;align-items:start;gap:0}
+.risk-row:last-child{border-bottom:none}
+.risk-row:hover{background:var(--bg2)}
+.risk-ref{font-weight:700;color:var(--navy);font-size:11px}
+.risk-rat{text-align:center}
+.risk-prog{font-weight:700;font-size:11px}
+.risk-desc{line-height:1.5;padding:0 8px}
+.risk-lh{text-align:center}
+.risk-imp{text-align:center}
+.risk-owner{font-size:11px;font-weight:700;padding-right:4px}
+.risk-stat{text-align:right}
+.ass-strip{background:#fff;border:.5px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:16px}
+.ass-hdr{display:grid;grid-template-columns:80px 160px 1fr 120px 100px 90px;background:var(--navy);padding:8px 10px;gap:0}
+.ass-hdr span{font-size:11px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.05em}
+.ass-row{display:grid;grid-template-columns:80px 160px 1fr 120px 100px 90px;padding:8px 10px;border-bottom:.5px solid var(--border);font-size:12px;align-items:start;gap:0}
+.ass-row:last-child{border-bottom:none}
+.ass-row:hover{background:var(--bg2)}
+.ass-ref{font-weight:700;color:var(--navy);font-size:11px}
+.ass-prog{font-weight:700;font-size:11px}
+.ass-desc{line-height:1.5;padding:0 8px}
+.ass-type{font-size:11px;color:var(--text2)}
+.ass-date{text-align:right;font-size:11px;padding-right:6px}
+.ass-stat{text-align:right}
+
+/* ── PORTFOLIO DISCLAIMER ── */
+.portfolio-disclaimer{position:sticky;top:0;z-index:9999;width:100%;background:#7A1F1F;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.5;padding:10px 16px;box-sizing:border-box;text-align:center;border-bottom:3px solid #4a1212}
+.portfolio-disclaimer strong{font-weight:700}
+.portfolio-disclaimer a{color:#ffffff;text-decoration:underline;font-weight:700}
+@media (max-width:640px){.portfolio-disclaimer{font-size:12px;padding:10px 12px}}
+.portfolio-about{max-width:1100px;margin:32px auto 40px;padding:20px 24px;border:1px solid var(--border);border-left:4px solid #7A1F1F;background:var(--bg);font-size:13px;line-height:1.6;color:var(--text2);scroll-margin-top:90px}
+.portfolio-about h2{font-size:15px;color:var(--navy);margin-bottom:8px}
+.portfolio-about p+p{margin-top:8px}
+.pd-short{display:none}
+.cg>*,.cg3>*,.mrow>*{min-width:0}
+@media (max-width:900px){.cg3{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){
+  .pd-full{display:none}.pd-short{display:inline}
+  .cg,.cg3{grid-template-columns:1fr}
+  .panel{padding:16px}
+  .hdr-top{flex-wrap:wrap;gap:4px;padding:12px 16px 0}
+  .hdr-main{padding:10px 16px 0}.hdr-title{font-size:21px}
+  .tab-bar{padding:0 8px}.tab{padding:12px 14px}
+  .cb0,.cb,.tw,.gate-strip,.cr-strip,.iss-strip,.risk-strip,.ass-strip{overflow-x:auto}
+  .gate-hdr,.gate-row,.cr-hdr,.cr-row,.iss-hdr,.iss-row,.risk-hdr,.risk-row,.ass-hdr,.ass-row{min-width:760px}
+  .dt{min-width:440px}
+  .stat-row{gap:10px}.stat-val{text-align:right}
+  .cbar-label{gap:10px}
+  .act-row{flex-wrap:wrap}
+  .portfolio-about{margin:24px 16px 32px;padding:16px}
+}
+</style>
+</head>
+<body>
+
+<div class="portfolio-disclaimer">
+  &#9888; <strong>Fictional company &amp; data &mdash; independent portfolio exercise by Divan Gerber.</strong>
+  <span class="pd-short">Not a role held or real employer information. All figures simulated; real vendor names used illustratively.</span>
+  <span class="pd-full">All organizations, programmes, people, figures, dates and scenarios on this site are simulated for demonstration purposes.
+  Not a role held or real employer information. This page names real companies and products (including Zebra Technologies, Cisco, Oracle, SAP, Microsoft Azure, OpenAI and Anthropic) and real bodies and laws (the Information Regulator, SAPC, POPIA, PAIA and NHIA) within an entirely fictional programme scenario. Every gate result, change request, issue, risk, assurance finding, regulator finding, vendor breach and decision shown is invented for this exercise; no real vendor has breached anything, no real regulator has made any finding, and no real audit or assessment took place. The people named, the committees, offices and decisions shown are simulated scenario constructs, not decisions that happened. This is a static design prototype, not a live governance feed.</span>
+  <a href="#about-this-portfolio">Read more</a>
+</div>
+
+<input class="tab-radios" type="radio" name="tabs" id="t1" checked>
+<input class="tab-radios" type="radio" name="tabs" id="t2">
+<input class="tab-radios" type="radio" name="tabs" id="t3">
+<input class="tab-radios" type="radio" name="tabs" id="t4">
+<input class="tab-radios" type="radio" name="tabs" id="t5">
+<input class="tab-radios" type="radio" name="tabs" id="t6">
+<input class="tab-radios" type="radio" name="tabs" id="t7">
+
+<div class="pg-hdr">
+  <div class="hdr-top">
+    <div class="hdr-org">MedRetail Group South Africa (Fictional)</div>
+    <div class="hdr-ref">Independent Portfolio Exercise &nbsp;|&nbsp; Simulated period: June 2026</div>
+  </div>
+  <div class="hdr-main">
+    <div class="hdr-title">Programme Governance Dashboard</div>
+    <div class="hdr-sub">8 active programmes &bull; 4 gate reviews due Q3 &bull; 12 change requests open &bull; 28 issues &bull; 18 risks &bull; 5 assurance reviews planned &bull; Simulated snapshot: 22 Jun 2026 (static data, not a live feed)</div>
+  </div>
+  <div class="tab-bar">
+    <label class="tab" for="t1">Governance Overview</label>
+    <label class="tab" for="t2">Gate Reviews</label>
+    <label class="tab" for="t3">Change Control</label>
+    <label class="tab" for="t4">Issue Log</label>
+    <label class="tab" for="t5">Risk Register</label>
+    <label class="tab" for="t6">Assurance &amp; Audit</label>
+    <label class="tab" for="t7">Decisions &amp; Actions</label>
+  </div>
+</div>
+
+
+<div class="panel" id="p1">
+
+  <div class="notice notice-a">
+    <strong>4 programmes require gate review decisions by end of Q3 2026:</strong> PRG-06 AI &amp; Data (Gate 3 &mdash; benefits threshold not met due to blocked use cases), PRG-05 Clinical IT (Gate 3 &mdash; replanning required), PRG-07 POPIA (Gate 3 &mdash; Regulator findings outstanding), and PRG-08 Infrastructure (Gate 1 &mdash; paused awaiting capex approval). The three Gate 3 reviews are to be completed before the September Board ARC; the PRG-08 Gate 1 re-review follows the Board capex decision.
+  </div>
+  <div class="notice notice-b" style="margin-top:10px">
+    <strong>Governance maturity:</strong> The ExCo Programme Office carried out a simulated assessment of the transformation portfolio governance against PRINCE2 Agile and MSP reference practices in May 2026 (design reference only; no compliance or certification is claimed). Key gaps identified: insufficient change control rigour on PRG-05 (5 unapproved scope additions), incomplete risk escalation on PRG-06, and no formal assurance review for PRG-07 in the last 6 months. Remediation plan agreed with programme directors.
+  </div>
+
+  <div class="mrow" style="margin-top:16px">
+    <div class="mc"><div class="ml">Active Programmes</div><div class="mv">8</div><div class="ms">Board-tracked</div></div>
+    <div class="mc"><div class="ml">Gate Reviews Due (Q3)</div><div class="mv v-a">4</div><div class="ms">Before Sep Board</div></div>
+    <div class="mc"><div class="ml">Change Requests Open</div><div class="mv v-a">12</div><div class="ms">4 awaiting approval</div></div>
+    <div class="mc"><div class="ml">Programme Issues Open</div><div class="mv v-a">28</div><div class="ms">6 critical</div></div>
+    <div class="mc"><div class="ml">Programme Risks Open</div><div class="mv v-a">18</div><div class="ms">5 critical</div></div>
+    <div class="mc"><div class="ml">Overdue Governance Actions</div><div class="mv v-r">7</div><div class="ms">Past agreed date</div></div>
+    <div class="mc"><div class="ml">Assurance Reviews (Q3)</div><div class="mv">5</div><div class="ms">Planned</div></div>
+    <div class="mc"><div class="ml">Governance Maturity Score</div><div class="mv v-a">2.8/5</div><div class="ms">Last assessed May 2026</div></div>
+  </div>
+
+  <div class="cg">
+    <div>
+      <div class="cb">
+        <div class="st">Governance health by programme &mdash; June 2026</div>
+        <div class="stat-row"><span class="stat-label"><span class="rag rag-g"></span><strong>PRG-01 Store Estate Expansion</strong></span><span class="stat-val"><span class="badge bg">Compliant</span></span></div>
+        <div class="stat-row"><span class="stat-label"><span class="rag rag-g"></span><strong>PRG-02 Supply Chain Digitisation</strong></span><span class="stat-val"><span class="badge bg">Compliant</span></span></div>
+        <div class="stat-row"><span class="stat-label"><span class="rag rag-g"></span><strong>PRG-03 Loyalty Platform Upgrade</strong></span><span class="stat-val"><span class="badge bg">Compliant</span></span></div>
+        <div class="stat-row"><span class="stat-label"><span class="rag rag-g"></span><strong>PRG-04 Digital Customer Experience</strong></span><span class="stat-val"><span class="badge bg">Compliant</span></span></div>
+        <div class="stat-row"><span class="stat-label"><span class="rag rag-a"></span><strong>PRG-05 Clinical IT Modernisation</strong></span><span class="stat-val"><span class="badge bh">Change control gap</span></span></div>
+        <div class="stat-row"><span class="stat-label"><span class="rag rag-a"></span><strong>PRG-06 AI &amp; Data Capability</strong></span><span class="stat-val"><span class="badge bh">Risk escalation gap</span></span></div>
+        <div class="stat-row"><span class="stat-label"><span class="rag rag-a"></span><strong>PRG-07 POPIA &amp; Data Governance</strong></span><span class="stat-val"><span class="badge bh">Assurance overdue</span></span></div>
+        <div class="stat-row"><span class="stat-label"><span class="rag rag-b"></span><strong>PRG-08 Infrastructure Refresh</strong></span><span class="stat-val"><span class="badge bp">Paused &mdash; gate required</span></span></div>
+      </div>
+
+      <div class="cb0">
+        <div class="st">Governance framework &mdash; simulated design references (no compliance claimed)</div>
+        <div class="stat-row"><span class="stat-label">Project methodology</span><span class="stat-val">PRINCE2 Agile (tailored)</span></div>
+        <div class="stat-row"><span class="stat-label">Programme management</span><span class="stat-val">MSP (Managing Successful Programmes)</span></div>
+        <div class="stat-row"><span class="stat-label">Risk management</span><span class="stat-val">Group ERM Framework</span></div>
+        <div class="stat-row"><span class="stat-label">Benefits management</span><span class="stat-val">CFO Benefits Realisation Policy</span></div>
+        <div class="stat-row"><span class="stat-label">Change control policy</span><span class="stat-val">CCP-001</span></div>
+        <div class="stat-row"><span class="stat-label">Assurance framework</span><span class="stat-val">Internal Audit &amp; EPO reviews</span></div>
+        <div class="stat-row"><span class="stat-label">Gate review model</span><span class="stat-val">5-gate lifecycle (G0&ndash;G4)</span></div>
+        <div class="stat-row"><span class="stat-label">Last maturity assessment</span><span class="stat-val">May 2026 (score: 2.8/5)</span></div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="cb">
+        <div class="st">Governance issue breakdown &mdash; open by type</div>
+        <div class="funnel">
+          <div class="funnel-tier ft-1">
+            <div><div class="funnel-label">Critical issues &mdash; programme delivery at risk</div><div class="funnel-sub">Data quality &bull; GPU &bull; Ethics gate &bull; Regulator</div></div>
+            <div class="funnel-count">6</div>
+          </div>
+          <div class="funnel-tier ft-2">
+            <div><div class="funnel-label">High issues &mdash; schedule or budget impact</div><div class="funnel-sub">Change control &bull; Resource &bull; Dependency</div></div>
+            <div class="funnel-count">9</div>
+          </div>
+          <div class="funnel-tier ft-3">
+            <div><div class="funnel-label">Medium issues &mdash; managed, owner assigned</div><div class="funnel-sub">Scope drift &bull; Benefit realisation &bull; Comms</div></div>
+            <div class="funnel-count">10</div>
+          </div>
+          <div class="funnel-tier ft-4">
+            <div><div class="funnel-label">Issues resolved MTD</div><div class="funnel-sub">Closed in June 2026</div></div>
+            <div class="funnel-count">8</div>
+          </div>
+          <div class="funnel-tier ft-5">
+            <div><div class="funnel-label">Change requests pending approval</div><div class="funnel-sub">Scope &bull; Budget &bull; Timeline</div></div>
+            <div class="funnel-count">4</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cb0">
+        <div class="st">Governance calendar &mdash; H2 2026</div>
+        <div class="stat-row"><span class="stat-label"><span class="rag rag-r"></span><strong>8 Jul</strong> &mdash; ExCo Programme Review (PRG-05 replanning)</span><span><span class="badge bc">Critical</span></span></div>
+        <div class="stat-row"><span class="stat-label"><span class="rag rag-a"></span><strong>16 Jul</strong> &mdash; TIC meeting (Oracle decision + AI cost review)</span><span><span class="badge bh">High</span></span></div>
+        <div class="stat-row"><span class="stat-label"><span class="rag rag-a"></span><strong>Aug 2026</strong> &mdash; Gate 3 review &mdash; PRG-07 POPIA</span><span><span class="badge bh">High</span></span></div>
+        <div class="stat-row"><span class="stat-label"><span class="rag rag-a"></span><strong>Aug 2026</strong> &mdash; Gate 3 review &mdash; PRG-06 AI &amp; Data</span><span><span class="badge bh">High</span></span></div>
+        <div class="stat-row"><span class="stat-label"><span class="rag rag-a"></span><strong>Aug 2026</strong> &mdash; Gate 3 review &mdash; PRG-05 Clinical IT</span><span><span class="badge bh">High</span></span></div>
+        <div class="stat-row"><span class="stat-label"><span class="rag rag-b"></span><strong>Sep 2026</strong> &mdash; Board ARC &mdash; portfolio report &amp; capex</span><span><span class="badge bp">Board</span></span></div>
+        <div class="stat-row"><span class="stat-label"><span class="rag rag-b"></span><strong>Sep 2026</strong> &mdash; Gate 1 review &mdash; PRG-08 Infrastructure</span><span><span class="badge bp">Planned</span></span></div>
+        <div class="stat-row"><span class="stat-label"><span class="rag rag-b"></span><strong>Oct 2026</strong> &mdash; SAP S/4HANA go/no-go (TIC)</span><span><span class="badge bp">Major decision</span></span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="panel" id="p2">
+
+  <p class="intro">The MedRetail SA programme gate review model follows a 5-gate lifecycle: G0 (Portfolio approval), G1 (Initiation and business case), G2 (Design and planning), G3 (Execution and mid-programme health check), and G4 (Benefits realisation and close). Gate reviews are conducted by the ExCo Programme Office with CFO and CIO sign-off required for Tier 1 programmes. Gate failure (unresolved critical issues at review) triggers a mandatory programme pause and remediation plan within 15 business days.</p>
+
+  <div class="mrow">
+    <div class="mc"><div class="ml">Gate Reviews Due (Q3)</div><div class="mv v-a">4</div><div class="ms">Jul&ndash;Sep 2026</div></div>
+    <div class="mc"><div class="ml">Gates Passed (YTD)</div><div class="mv v-g">4</div><div class="ms">PRG-01 to PRG-04</div></div>
+    <div class="mc"><div class="ml">Gates Deferred</div><div class="mv v-a">2</div><div class="ms">PRG-05 &amp; PRG-08</div></div>
+    <div class="mc"><div class="ml">Gate Failures (YTD)</div><div class="mv v-g">0</div><div class="ms">No failures this year</div></div>
+    <div class="mc"><div class="ml">Next Gate Review</div><div class="mv">Aug 2026</div><div class="ms">PRG-05, 06, 07 (G3)</div></div>
+    <div class="mc"><div class="ml">Programmes at Gate Risk</div><div class="mv v-a">2</div><div class="ms">PRG-05 &amp; PRG-06</div></div>
+  </div>
+
+  <div class="gate-strip">
+    <div class="gate-hdr">
+      <span>Gate #</span>
+      <span>Programme</span>
+      <span>Gate Type</span>
+      <span>Gate Focus &amp; Criteria</span>
+      <span class="gate-ctr">Reviewer</span>
+      <span class="gate-ctr">Date</span>
+      <span class="gate-num">Outcome</span>
+      <span class="gate-ctr">Status</span>
+    </div>
+    <div class="gate-row">
+      <div class="gate-id">G2-PRG01</div>
+      <div class="gate-prog">PRG-01 Store Estate</div>
+      <div class="gate-phase">Gate 2 &mdash; Design</div>
+      <div class="gate-desc">Site design, contractor selection, planning approvals confirmed.</div>
+      <div class="gate-ctr">CIO / CFO</div><div class="gate-ctr">Feb 2026</div>
+      <div class="gate-num"><span class="badge bg">Passed</span></div>
+      <div class="gate-ctr"><span class="badge bg">Complete</span></div>
+    </div>
+    <div class="gate-row">
+      <div class="gate-id">G2-PRG02</div>
+      <div class="gate-prog">PRG-02 Supply Chain</div>
+      <div class="gate-phase">Gate 2 &mdash; Design</div>
+      <div class="gate-desc">WMS design, DC scope, integration architecture approved.</div>
+      <div class="gate-ctr">CIO / CFO</div><div class="gate-ctr">Jan 2026</div>
+      <div class="gate-num"><span class="badge bg">Passed</span></div>
+      <div class="gate-ctr"><span class="badge bg">Complete</span></div>
+    </div>
+    <div class="gate-row">
+      <div class="gate-id">G3-PRG03</div>
+      <div class="gate-prog">PRG-03 Loyalty</div>
+      <div class="gate-phase">Gate 3 &mdash; Mid-Programme</div>
+      <div class="gate-desc">Schedule, budget, and benefits on track. v3 DB migration retry scheduled. Passed with 1 minor action.</div>
+      <div class="gate-ctr">ExCo PMO</div><div class="gate-ctr">May 2026</div>
+      <div class="gate-num"><span class="badge bg">Passed</span></div>
+      <div class="gate-ctr"><span class="badge bg">Complete</span></div>
+    </div>
+    <div class="gate-row">
+      <div class="gate-id">G3-PRG04</div>
+      <div class="gate-prog">PRG-04 Digital</div>
+      <div class="gate-phase">Gate 3 &mdash; Mid-Programme</div>
+      <div class="gate-desc">E-commerce checkout +8.4% conversion. On schedule, on budget. Passed with commendation.</div>
+      <div class="gate-ctr">ExCo PMO</div><div class="gate-ctr">Jun 2026</div>
+      <div class="gate-num"><span class="badge bg">Passed</span></div>
+      <div class="gate-ctr"><span class="badge bg">Complete</span></div>
+    </div>
+    <div class="gate-row">
+      <div class="gate-id">G3-PRG07</div>
+      <div class="gate-prog">PRG-07 POPIA</div>
+      <div class="gate-phase">Gate 3 &mdash; Mid-Programme</div>
+      <div class="gate-desc">Regulator findings, PAIA Manual overdue, data quality below target. Gate at risk of deferral. DPO remediation plan required as input.</div>
+      <div class="gate-ctr">CRO / DPO</div><div class="gate-ctr">Aug 2026</div>
+      <div class="gate-num"><span class="badge bh">At Risk</span></div>
+      <div class="gate-ctr"><span class="badge bm">Scheduled</span></div>
+    </div>
+    <div class="gate-row">
+      <div class="gate-id">G3-PRG06</div>
+      <div class="gate-prog">PRG-06 AI &amp; Data</div>
+      <div class="gate-phase">Gate 3 &mdash; Mid-Programme</div>
+      <div class="gate-desc">H1 benefits 23% of target. 3 blocked use cases. Ethics gate open. Gate criteria not met until GPU and ethics resolved.</div>
+      <div class="gate-ctr">CDO / CFO</div><div class="gate-ctr">Aug 2026</div>
+      <div class="gate-num"><span class="badge bc">Criteria not met</span></div>
+      <div class="gate-ctr"><span class="badge bh">At Risk</span></div>
+    </div>
+    <div class="gate-row">
+      <div class="gate-id">G3-PRG05</div>
+      <div class="gate-prog">PRG-05 Clinical IT</div>
+      <div class="gate-phase">Gate 3 &mdash; Mid-Programme</div>
+      <div class="gate-desc">57% spent, R2M of R18M H1 benefits. Replanning required. Gate deferred from Jun; revised plan must be approved at 8 Jul ExCo first.</div>
+      <div class="gate-ctr">CIO / CFO</div><div class="gate-ctr">Aug 2026</div>
+      <div class="gate-num"><span class="badge bc">Deferred</span></div>
+      <div class="gate-ctr"><span class="badge bc">Deferred</span></div>
+    </div>
+    <div class="gate-row">
+      <div class="gate-id">G1-PRG08</div>
+      <div class="gate-prog">PRG-08 Infrastructure</div>
+      <div class="gate-phase">Gate 1 &mdash; Initiation</div>
+      <div class="gate-desc">Programme paused. DC1 switch capex requires Board approval Sep 2026. Gate 1 re-review to follow Board decision.</div>
+      <div class="gate-ctr">CTO / CFO</div><div class="gate-ctr">Sep 2026</div>
+      <div class="gate-num"><span class="badge bp">Paused</span></div>
+      <div class="gate-ctr"><span class="badge bp">Paused</span></div>
+    </div>
+  </div>
+
+  <div class="cg" style="margin-bottom:0">
+    <div class="cb0">
+      <div class="st">Gate criteria scorecard &mdash; PRG-06 AI &amp; Data (Gate 3)</div>
+      <div class="notice notice-r">Gate 3 criteria for PRG-06 are <strong>not currently met</strong>. 3 of 5 criteria are failing. Gate review will proceed in Aug 2026 but a conditional pass requiring an accelerated recovery plan is the expected outcome.</div>
+      <div class="stat-row" style="margin-top:10px"><span class="stat-label">Benefits &ge;50% of H1 target</span><span class="stat-val"><span class="badge bc">Fail &mdash; 23%</span></span></div>
+      <div class="stat-row"><span class="stat-label">Schedule &le;10% slippage</span><span class="stat-val"><span class="badge bc">Fail &mdash; GPU overdue</span></span></div>
+      <div class="stat-row"><span class="stat-label">Budget utilisation within 5%</span><span class="stat-val"><span class="badge bg">Pass &mdash; on plan</span></span></div>
+      <div class="stat-row"><span class="stat-label">Critical risks have mitigation plans</span><span class="stat-val"><span class="badge bc">Fail &mdash; Ethics gate open</span></span></div>
+      <div class="stat-row"><span class="stat-label">Governance compliant</span><span class="stat-val"><span class="badge bg">Pass &mdash; improving</span></span></div>
+    </div>
+    <div class="cb0">
+      <div class="st">Gate criteria scorecard &mdash; PRG-07 POPIA (Gate 3)</div>
+      <div class="notice notice-a">Gate 3 criteria for PRG-07 are <strong>partially met</strong>. DPO remediation plan and PAIA Manual completion are prerequisites for a clean pass. Conditional pass expected with 3 remediation actions required by Oct.</div>
+      <div class="stat-row" style="margin-top:10px"><span class="stat-label">Benefits &ge;50% of H1 target</span><span class="stat-val"><span class="badge bh">Partial &mdash; 12%</span></span></div>
+      <div class="stat-row"><span class="stat-label">Schedule &le;10% slippage</span><span class="stat-val"><span class="badge bc">Fail &mdash; PAIA overdue since Mar</span></span></div>
+      <div class="stat-row"><span class="stat-label">Budget utilisation within 5%</span><span class="stat-val"><span class="badge bg">Pass &mdash; on plan</span></span></div>
+      <div class="stat-row"><span class="stat-label">Regulator engagement current</span><span class="stat-val"><span class="badge bc">Fail &mdash; 3 findings open</span></span></div>
+      <div class="stat-row"><span class="stat-label">Governance compliant</span><span class="stat-val"><span class="badge bm">Partial &mdash; assurance overdue</span></span></div>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="panel" id="p3">
+
+  <p class="intro">All changes to approved programme scope, budget, schedule, or benefits case must follow the Change Control Policy (CCP-001). Changes are categorised as Minor (Programme Director authority, &lt;R500k and &lt;4-week schedule impact), Major (TIC authority, &gt;R500k or &gt;4-week impact), or Exceptional (Board authority: &gt;R5M, a material benefits change, or capex the CFO refers to the Board &mdash; CR-2026-038 at R1.4M is referred because the DC1 switches are end-of-support). Unapproved scope changes discovered in governance reviews are logged as change control breaches and require retrospective approval.</p>
+
+  <div class="mrow">
+    <div class="mc"><div class="ml">Change Requests Open</div><div class="mv">12</div><div class="ms">All programmes</div></div>
+    <div class="mc"><div class="ml">Pending Approval</div><div class="mv v-a">4</div><div class="ms">TIC or ExCo sign-off</div></div>
+    <div class="mc"><div class="ml">Approved MTD</div><div class="mv v-g">5</div><div class="ms">Implemented</div></div>
+    <div class="mc"><div class="ml">Rejected MTD</div><div class="mv">1</div><div class="ms">Out of scope</div></div>
+    <div class="mc"><div class="ml">Change Control Breaches</div><div class="mv v-r">5</div><div class="ms">PRG-05 unapproved scope</div></div>
+    <div class="mc"><div class="ml">Budget Impact (open CRs)</div><div class="mv v-a">R3.7M</div><div class="ms">If all open items approved (incl. R1.1M breach)</div></div>
+  </div>
+
+  <div class="cr-strip">
+    <div class="cr-hdr">
+      <span>CR #</span>
+      <span>Programme</span>
+      <span>Type</span>
+      <span>Change Description</span>
+      <span class="cr-num">Budget Impact (R)</span>
+      <span class="cr-ctr">Schedule</span>
+      <span class="cr-ctr">Status</span>
+    </div>
+    <div class="cr-row">
+      <div class="cr-ref">CR-2026-041</div>
+      <div class="cr-prog">PRG-06 AI &amp; Data</div>
+      <div class="cr-type">Major</div>
+      <div class="cr-desc">Azure GPU cluster scope addition for AI-013. Required for Demand Forecasting v2 deployment. CTO / TIC approval required.</div>
+      <div class="cr-num v-a">+R620k p.a.</div>
+      <div class="cr-ctr">+8 weeks</div>
+      <div class="cr-ctr"><span class="badge bh">Pending TIC</span></div>
+    </div>
+    <div class="cr-row">
+      <div class="cr-ref">CR-2026-039</div>
+      <div class="cr-prog">PRG-05 Clinical IT</div>
+      <div class="cr-type">Major</div>
+      <div class="cr-desc">Clinical Analytics v2 scope expansion &mdash; add NHIA reporting module. Unbudgeted. Head of Clinical request.</div>
+      <div class="cr-num v-a">+R480k</div>
+      <div class="cr-ctr">+5 weeks</div>
+      <div class="cr-ctr"><span class="badge bh">Pending TIC</span></div>
+    </div>
+    <div class="cr-row">
+      <div class="cr-ref">CR-2026-038</div>
+      <div class="cr-prog">PRG-08 Infrastructure</div>
+      <div class="cr-type">Exceptional</div>
+      <div class="cr-desc">DC1 core switch replacement &mdash; R1.4M capex. Required due to Cisco EoS Aug 2026. Board approval required.</div>
+      <div class="cr-num v-r">+R1.4M capex</div>
+      <div class="cr-ctr">+12 weeks</div>
+      <div class="cr-ctr"><span class="badge bc">Pending Board</span></div>
+    </div>
+    <div class="cr-row">
+      <div class="cr-ref">CR-2026-036</div>
+      <div class="cr-prog">PRG-07 POPIA</div>
+      <div class="cr-type">Minor</div>
+      <div class="cr-desc">POPIA re-consent campaign for 102 817 loyalty members &mdash; add CRM channel and SMS cost. Within 5% budget tolerance.</div>
+      <div class="cr-num">+R140k</div>
+      <div class="cr-ctr">+2 weeks</div>
+      <div class="cr-ctr"><span class="badge bm">Pending Dir</span></div>
+    </div>
+    <div class="cr-row">
+      <div class="cr-ref">CR-2026-034</div>
+      <div class="cr-prog">PRG-03 Loyalty</div>
+      <div class="cr-type">Minor</div>
+      <div class="cr-desc">Loyalty DB migration (CHG-8860) window extension from 4h to 5h. Additional DBA resource for retry. CMO approved.</div>
+      <div class="cr-num">+R18k</div>
+      <div class="cr-ctr">0</div>
+      <div class="cr-ctr"><span class="badge bg">Approved</span></div>
+    </div>
+    <div class="cr-row">
+      <div class="cr-ref">CR-2026-032</div>
+      <div class="cr-prog">PRG-02 SC</div>
+      <div class="cr-type">Minor</div>
+      <div class="cr-desc">DC4 RFID integration &mdash; add 2 additional DC sites to scope. Covered by contingency budget. Head SC approved.</div>
+      <div class="cr-num">+R84k</div>
+      <div class="cr-ctr">+1 week</div>
+      <div class="cr-ctr"><span class="badge bg">Approved</span></div>
+    </div>
+    <div class="cr-row">
+      <div class="cr-ref">CR-2026-030</div>
+      <div class="cr-prog">PRG-01 Store</div>
+      <div class="cr-type">Minor</div>
+      <div class="cr-desc">Centurion store fit-out specification upgrade (clinical area layout change). Cost within contingency. CRO approved.</div>
+      <div class="cr-num">+R220k</div>
+      <div class="cr-ctr">+1 week</div>
+      <div class="cr-ctr"><span class="badge bg">Approved</span></div>
+    </div>
+    <div class="cr-row">
+      <div class="cr-ref">CR-2026-028</div>
+      <div class="cr-prog">PRG-05 Clinical</div>
+      <div class="cr-type">Major</div>
+      <div class="cr-desc">Patient Master deduplication added to programme scope (DGA-101). Required deliverable for Clinical Analytics. Approved at the 18 Jun TIC on CDO / CIO recommendation.</div>
+      <div class="cr-num">+R380k</div>
+      <div class="cr-ctr">+6 weeks</div>
+      <div class="cr-ctr"><span class="badge bg">Approved</span></div>
+    </div>
+    <div class="cr-row">
+      <div class="cr-ref">CR-2026-025</div>
+      <div class="cr-prog">PRG-06 AI</div>
+      <div class="cr-type">Minor</div>
+      <div class="cr-desc">AI Ethics Framework (AIF-001) added as programme deliverable. No budget impact (DPO resource). CDO approved.</div>
+      <div class="cr-num">R0</div>
+      <div class="cr-ctr">+8 weeks</div>
+      <div class="cr-ctr"><span class="badge bg">Approved</span></div>
+    </div>
+    <div class="cr-row" style="background:var(--rf)">
+      <div class="cr-ref v-r">BREACH-05</div>
+      <div class="cr-prog">PRG-05 Clinical</div>
+      <div class="cr-type" style="color:var(--rt)">Breach</div>
+      <div class="cr-desc">5 scope additions to Clinical IT programme implemented without formal CR approval. Retrospective approval required from CIO. Total impact: R1.1M, 9 weeks on the critical path (individual items overlap; 13 weeks if summed).</div>
+      <div class="cr-num v-r">R1.1M</div>
+      <div class="cr-ctr v-r">+9 wks</div>
+      <div class="cr-ctr"><span class="badge bc">Retrospective</span></div>
+    </div>
+  </div>
+
+  <div class="cg" style="margin-bottom:0">
+    <div class="cb0">
+      <div class="st">Change control breach &mdash; PRG-05 Clinical IT (retrospective)</div>
+      <div class="notice notice-r"><strong>5 unapproved scope additions identified in May 2026 governance review.</strong> Breaches involve Clinical Analytics additional modules, Zebra failover infrastructure, patient deduplication tooling, and a SAPC compliance reporting module. All changes implemented without CCP-001 approval. CIO and Programme Director to provide retrospective approval or reject and reverse within 10 business days.</div>
+      <div class="stat-row" style="margin-top:10px"><span class="stat-label">Breach 1: Clinical Analytics extra modules</span><span class="stat-val v-r">R380k, +6 weeks</span></div>
+      <div class="stat-row"><span class="stat-label">Breach 2: Zebra failover infrastructure</span><span class="stat-val v-r">R220k, +2 weeks</span></div>
+      <div class="stat-row"><span class="stat-label">Breach 3: Patient dedup tooling</span><span class="stat-val v-r">R180k, +3 weeks</span></div>
+      <div class="stat-row"><span class="stat-label">Breach 4: SAPC compliance module</span><span class="stat-val v-r">R180k, +2 weeks</span></div>
+      <div class="stat-row"><span class="stat-label">Breach 5: Additional DC integrations</span><span class="stat-val v-r">R140k, 0 weeks</span></div>
+      <div class="stat-row"><span class="stat-label"><strong>Total retrospective impact</strong></span><span class="stat-val v-r"><strong>R1.1M, +9 weeks</strong></span></div>
+      <div class="stat-row"><span class="stat-label">Retrospective approval deadline</span><span class="stat-val">8 Jul 2026 ExCo</span></div>
+    </div>
+    <div class="cb0">
+      <div class="st">Open change requests &mdash; budget impact if all approved (approved CRs excluded)</div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>CR-2026-038 DC1 switch (Board)</span><span class="v-r">+R1.40M capex</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:100%;background:var(--rt)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>BREACH-05 retrospective (PRG-05)</span><span class="v-r">+R1.10M</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:79%;background:var(--rt)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>CR-2026-041 GPU (PRG-06)</span><span class="v-a">+R620k p.a.</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:44%;background:var(--ot)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>CR-2026-039 NHIA module (PRG-05)</span><span class="v-a">+R480k</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:34%;background:var(--at)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>CR-2026-036 re-consent campaign (PRG-07)</span><span>+R140k</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:10%;background:var(--blue)"></div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="panel" id="p4">
+
+  <p class="intro">Programme issues are problems that have already materialised and are impacting delivery, unlike risks which are potential future events. All issues are logged by the Programme Director in the central issue register and reviewed at the fortnightly Programme Review meeting. Critical issues (delivery stopped or benefits at serious risk) are escalated to the ExCo Programme Office within 24 hours. Issues unresolved after 20 business days are escalated to the portfolio sponsor.</p>
+
+  <div class="mrow">
+    <div class="mc"><div class="ml">Open Issues (Total)</div><div class="mv">28</div><div class="ms">All programmes</div></div>
+    <div class="mc"><div class="ml">Critical Issues</div><div class="mv v-r">6</div><div class="ms">Delivery stopped/at risk</div></div>
+    <div class="mc"><div class="ml">High Issues</div><div class="mv v-a">9</div><div class="ms">Schedule/budget impact</div></div>
+    <div class="mc"><div class="ml">Medium Issues</div><div class="mv">10</div><div class="ms">Managed</div></div>
+    <div class="mc"><div class="ml">Low Issues</div><div class="mv">3</div><div class="ms">Noted</div></div>
+    <div class="mc"><div class="ml">Issues Resolved MTD</div><div class="mv v-g">8</div><div class="ms">Closed this month</div></div>
+    <div class="mc"><div class="ml">Issues Overdue (&gt;20 days)</div><div class="mv v-r">5</div><div class="ms">Escalated</div></div>
+    <div class="mc"><div class="ml">Avg Days Open</div><div class="mv v-a">12</div><div class="ms">All open issues (est. from age bands)</div></div>
+  </div>
+
+  <div class="iss-strip">
+    <div class="iss-hdr">
+      <span>Issue #</span>
+      <span class="iss-sev">Severity</span>
+      <span>Programme</span>
+      <span>Description</span>
+      <span>Owner</span>
+      <span class="iss-due">Due Date</span>
+      <span class="iss-stat">Status</span>
+    </div>
+    <div class="iss-row">
+      <div class="iss-ref">ISS-PRG-081</div>
+      <div class="iss-sev"><span class="badge bc">Critical</span></div>
+      <div class="iss-prog">PRG-05 Clinical</div>
+      <div class="iss-desc">Patient Master deduplication (MS-037) overdue 8 days. Blocks Clinical Analytics v2 data validation, AI-015 training, and Clinical IT Gate 3 criteria.</div>
+      <div class="iss-owner">CDO</div><div class="iss-due">30 Jun</div>
+      <div class="iss-stat"><span class="badge bh">In Progress</span></div>
+    </div>
+    <div class="iss-row">
+      <div class="iss-ref">ISS-PRG-079</div>
+      <div class="iss-sev"><span class="badge bc">Critical</span></div>
+      <div class="iss-prog">PRG-06 AI</div>
+      <div class="iss-desc">GPU infrastructure CTO decision due 30 Jun (slipped from an original 15 Jun target). Demand Forecasting v2 (AI-013) model complete but undeployable. R800k annual value blocked.</div>
+      <div class="iss-owner">CTO / CIO</div><div class="iss-due">30 Jun</div>
+      <div class="iss-stat"><span class="badge bh">In Progress</span></div>
+    </div>
+    <div class="iss-row">
+      <div class="iss-ref">ISS-PRG-077</div>
+      <div class="iss-sev"><span class="badge bc">Critical</span></div>
+      <div class="iss-prog">PRG-06 AI</div>
+      <div class="iss-desc">AI Ethics Framework (AIF-001) not Board-approved. 3 patient-facing clinical AI use cases (R2.7M value) gated. Framework draft due 31 Jul 2026.</div>
+      <div class="iss-owner">DPO / CDO</div><div class="iss-due">31 Jul</div>
+      <div class="iss-stat"><span class="badge bh">In Progress</span></div>
+    </div>
+    <div class="iss-row">
+      <div class="iss-ref">ISS-PRG-075</div>
+      <div class="iss-sev"><span class="badge bc">Critical</span></div>
+      <div class="iss-prog">PRG-05 Clinical</div>
+      <div class="iss-desc">5 unapproved scope additions discovered (BREACH-05). Change control policy breach. CIO must grant retrospective approval or reject and reverse. Blocks Gate 3.</div>
+      <div class="iss-owner">CIO / Prog Dir</div><div class="iss-due">8 Jul</div>
+      <div class="iss-stat"><span class="badge bm">Pending</span></div>
+    </div>
+    <div class="iss-row">
+      <div class="iss-ref">ISS-PRG-073</div>
+      <div class="iss-sev"><span class="badge bc">Critical</span></div>
+      <div class="iss-prog">PRG-07 POPIA</div>
+      <div class="iss-desc">3 Information Regulator findings open (REG-F01, F02, F03). PAIA Manual overdue since Mar 2026. Regulatory non-compliance risk. DPO remediation plan to Regulator overdue (originally due 31 May; revised 15 Jul).</div>
+      <div class="iss-owner">DPO / Legal</div><div class="iss-due">15 Jul</div>
+      <div class="iss-stat"><span class="badge bh">In Progress</span></div>
+    </div>
+    <div class="iss-row">
+      <div class="iss-ref">ISS-PRG-071</div>
+      <div class="iss-sev"><span class="badge bc">Critical</span></div>
+      <div class="iss-prog">PRG-08 Infra</div>
+      <div class="iss-desc">DC1 core switches EoS Aug 2026. No security patches post-EoS. Capex motion not yet submitted to Board. Infrastructure programme paused. Unmitigated security risk from Aug.</div>
+      <div class="iss-owner">CTO / L.Mthembu</div><div class="iss-due">10 Jul</div>
+      <div class="iss-stat"><span class="badge bm">Pending</span></div>
+    </div>
+    <div class="iss-row">
+      <div class="iss-ref">ISS-PRG-069</div>
+      <div class="iss-sev"><span class="badge bh">High</span></div>
+      <div class="iss-prog">PRG-06 AI</div>
+      <div class="iss-desc">Clinical AI Lead role unfilled. Clinical function has zero ML practitioners. 3 clinical AI use cases have no internal delivery capability. Board headcount approval needed Aug.</div>
+      <div class="iss-owner">CHRO / CDO</div><div class="iss-due">Aug Board</div>
+      <div class="iss-stat"><span class="badge bm">Pending</span></div>
+    </div>
+    <div class="iss-row">
+      <div class="iss-ref">ISS-PRG-067</div>
+      <div class="iss-sev"><span class="badge bh">High</span></div>
+      <div class="iss-prog">PRG-06 AI</div>
+      <div class="iss-desc">Model Risk Management Policy (MRM-001) not approved. Supplier Risk Scorer (AI-014) and future financial AI models cannot receive production approval. CDO to table 15 Aug.</div>
+      <div class="iss-owner">CDO / CRO</div><div class="iss-due">15 Aug</div>
+      <div class="iss-stat"><span class="badge bm">Pending</span></div>
+    </div>
+    <div class="iss-row">
+      <div class="iss-ref">ISS-PRG-065</div>
+      <div class="iss-sev"><span class="badge bh">High</span></div>
+      <div class="iss-prog">PRG-05 Clinical</div>
+      <div class="iss-desc">PRG-05 programme plan has not been updated since March 2026. Revised H2 milestone plan required post-deduplication. ExCo needs revised plan at 8 Jul review.</div>
+      <div class="iss-owner">Head Clinical / CIO</div><div class="iss-due">8 Jul</div>
+      <div class="iss-stat"><span class="badge bm">Pending</span></div>
+    </div>
+    <div class="iss-row">
+      <div class="iss-ref">ISS-PRG-063</div>
+      <div class="iss-sev"><span class="badge bh">High</span></div>
+      <div class="iss-prog">PRG-07 POPIA</div>
+      <div class="iss-desc">Programme assurance review not conducted in last 6 months (last: Dec 2025). Assurance gap identified in May governance maturity assessment. Review to be scheduled Jul.</div>
+      <div class="iss-owner">CDO / IA</div><div class="iss-due">31 Jul</div>
+      <div class="iss-stat"><span class="badge bm">Pending</span></div>
+    </div>
+    <div class="iss-row">
+      <div class="iss-ref">ISS-PRG-061</div>
+      <div class="iss-sev"><span class="badge bh">High</span></div>
+      <div class="iss-prog">PRG-02 SC</div>
+      <div class="iss-desc">Supply chain benefit R11M vs R14M H1 target (79%). DIFOT 94.8% vs 95% target. WMS DC4 integration went live 15 Jun and is expected to improve DIFOT in H2. Recovery plan in progress.</div>
+      <div class="iss-owner">Head SC</div><div class="iss-due">31 Aug</div>
+      <div class="iss-stat"><span class="badge bh">In Progress</span></div>
+    </div>
+  </div>
+
+  <div class="cg" style="margin-bottom:0">
+    <div class="cb0">
+      <div class="st">Issues by programme (open count)</div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>PRG-06 AI &amp; Data (most complex)</span><span class="v-r">8 issues</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:100%;background:var(--rt)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>PRG-05 Clinical IT</span><span class="v-r">7 issues</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:88%;background:var(--rt)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>PRG-07 POPIA &amp; Data Gov.</span><span class="v-a">6 issues</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:75%;background:var(--ot)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>PRG-08 Infrastructure</span><span class="v-a">3 issues</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:38%;background:var(--at)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>PRG-02 Supply Chain</span><span>2 issues</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:25%;background:var(--blue)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>PRG-01, 03, 04 (on-track)</span><span class="v-g">2 issues (total)</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:25%;background:var(--gt)"></div></div>
+      </div>
+    </div>
+    <div class="cb0">
+      <div class="st">Issue ageing profile</div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>0&ndash;5 days old</span><span style="font-weight:700">8 issues</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:100%;background:var(--gt)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>6&ndash;10 days old</span><span style="font-weight:700">7 issues</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:88%;background:var(--blue)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>11&ndash;20 days old</span><span style="font-weight:700">8 issues</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:100%;background:var(--at)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>21&ndash;30 days (past 20-day SLA)</span><span class="v-a">3 issues</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:38%;background:var(--ot)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>&gt;30 days (escalated)</span><span class="v-r">2 issues</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:25%;background:var(--rt)"></div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="panel" id="p5">
+
+  <p class="intro">Programme risks are potential future events that could adversely affect delivery, benefits, budget, or schedule. Unlike issues (which have already materialised), risks are forward-looking. All risks are scored by likelihood (Low / Medium / High) and impact (Low / Medium / High) using the Group ERM matrix (High/High = Critical; Medium/High and High/Medium = High; ExCo may override upward for regulatory, patient-safety or Board-gate exposure; the 7 High and 5 Critical risks are itemised, the 6 Medium risks are not). Critical risks are escalated to the ExCo Programme Office and reported to the Board ARC quarterly. Risk appetite for transformation programmes is &ldquo;moderate&rdquo; &mdash; accept medium risks with mitigation; escalate all high-impact risks.</p>
+
+  <div class="mrow">
+    <div class="mc"><div class="ml">Open Risks (Total)</div><div class="mv">18</div><div class="ms">All programmes</div></div>
+    <div class="mc"><div class="ml">Critical Risks</div><div class="mv v-r">5</div><div class="ms">ExCo escalated</div></div>
+    <div class="mc"><div class="ml">High Risks</div><div class="mv v-a">7</div><div class="ms">Owner assigned</div></div>
+    <div class="mc"><div class="ml">Medium Risks</div><div class="mv">6</div><div class="ms">Monitored</div></div>
+    <div class="mc"><div class="ml">Risks Closed MTD</div><div class="mv v-g">2</div><div class="ms">Mitigated</div></div>
+    <div class="mc"><div class="ml">Risks with Overdue Actions</div><div class="mv v-r">4</div><div class="ms">Past treatment date</div></div>
+  </div>
+
+  <div class="risk-strip">
+    <div class="risk-hdr">
+      <span>Risk #</span>
+      <span class="risk-rat">Rating</span>
+      <span>Programme</span>
+      <span>Risk Description</span>
+      <span class="risk-lh">Likelihood</span>
+      <span class="risk-imp">Impact</span>
+      <span>Owner</span>
+      <span class="risk-stat">Status</span>
+    </div>
+    <div class="risk-row">
+      <div class="risk-ref">RSK-P-041</div>
+      <div class="risk-rat"><span class="badge bc">Critical</span></div>
+      <div class="risk-prog">PRG-05, 06</div>
+      <div class="risk-desc">AI Ethics Framework not Board-approved before Sep 2026. 3 clinical AI use cases permanently blocked in FY2026. R2.7M value and programme Gate 3 at risk.</div>
+      <div class="risk-lh"><span class="breach-pill breach-r">High</span></div>
+      <div class="risk-imp"><span class="breach-pill breach-r">High</span></div>
+      <div class="risk-owner">CDO / DPO</div>
+      <div class="risk-stat"><span class="badge bh">In Progress</span></div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-ref">RSK-P-039</div>
+      <div class="risk-rat"><span class="badge bc">Critical</span></div>
+      <div class="risk-prog">PRG-05, 06</div>
+      <div class="risk-desc">Patient data quality issue persists beyond 30 Jun. Clinical IT replanning becomes necessary, further deferring Analytics v2 go-live and AI-015 model training.</div>
+      <div class="risk-lh"><span class="breach-pill breach-a">Medium</span></div>
+      <div class="risk-imp"><span class="breach-pill breach-r">High</span></div>
+      <div class="risk-owner">CDO</div>
+      <div class="risk-stat"><span class="badge bh">In Progress</span></div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-ref">RSK-P-037</div>
+      <div class="risk-rat"><span class="badge bc">Critical</span></div>
+      <div class="risk-prog">PRG-06 AI</div>
+      <div class="risk-desc">GPU infrastructure not approved by 30 Jun. AI-013 deployment misses Q3 window. H2 AI value target recovers only partially. CDO cannot achieve Gate 3 benefits threshold.</div>
+      <div class="risk-lh"><span class="breach-pill breach-r">High</span></div>
+      <div class="risk-imp"><span class="breach-pill breach-r">High</span></div>
+      <div class="risk-owner">CTO</div>
+      <div class="risk-stat"><span class="badge bm">Pending</span></div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-ref">RSK-P-035</div>
+      <div class="risk-rat"><span class="badge bc">Critical</span></div>
+      <div class="risk-prog">PRG-07 POPIA</div>
+      <div class="risk-desc">Information Regulator escalates findings to formal enforcement action. Financial penalty of up to R10M and reputational damage. DPO remediation plan overdue.</div>
+      <div class="risk-lh"><span class="breach-pill breach-a">Medium</span></div>
+      <div class="risk-imp"><span class="breach-pill breach-r">High</span></div>
+      <div class="risk-owner">DPO / Legal</div>
+      <div class="risk-stat"><span class="badge bh">In Progress</span></div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-ref">RSK-P-033</div>
+      <div class="risk-rat"><span class="badge bc">Critical</span></div>
+      <div class="risk-prog">PRG-08 Infra</div>
+      <div class="risk-desc">DC1 core switches reach EoS Aug 2026 without Board capex approval. Network operates on unsupported equipment post-EoS creating security and availability risk.</div>
+      <div class="risk-lh"><span class="breach-pill breach-r">High</span></div>
+      <div class="risk-imp"><span class="breach-pill breach-a">Medium</span></div>
+      <div class="risk-owner">CTO</div>
+      <div class="risk-stat"><span class="badge bm">Pending</span></div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-ref">RSK-P-031</div>
+      <div class="risk-rat"><span class="badge bh">High</span></div>
+      <div class="risk-prog">PRG-06 AI</div>
+      <div class="risk-desc">Clinical AI Lead role remains unfilled through H2 2026. Clinical AI programme has no internal delivery capability. Board headcount approval needed Aug.</div>
+      <div class="risk-lh"><span class="breach-pill breach-r">High</span></div>
+      <div class="risk-imp"><span class="breach-pill breach-a">Medium</span></div>
+      <div class="risk-owner">CHRO / CDO</div>
+      <div class="risk-stat"><span class="badge bm">Pending</span></div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-ref">RSK-P-029</div>
+      <div class="risk-rat"><span class="badge bh">High</span></div>
+      <div class="risk-prog">PRG-05 Clinical</div>
+      <div class="risk-desc">Change control breach (BREACH-05) not retrospectively approved by ExCo. Programme cannot proceed to Gate 3 without resolution. Risk of programme pause.</div>
+      <div class="risk-lh"><span class="breach-pill breach-a">Medium</span></div>
+      <div class="risk-imp"><span class="breach-pill breach-r">High</span></div>
+      <div class="risk-owner">CIO / Prog Dir</div>
+      <div class="risk-stat"><span class="badge bm">Pending</span></div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-ref">RSK-P-027</div>
+      <div class="risk-rat"><span class="badge bh">High</span></div>
+      <div class="risk-prog">Portfolio</div>
+      <div class="risk-desc">Change fatigue across 8 concurrent programmes leads to adoption failure in Q3. Retail staff, clinical, and analytics users failing to engage with new systems. NPS declining.</div>
+      <div class="risk-lh"><span class="breach-pill breach-r">High</span></div>
+      <div class="risk-imp"><span class="breach-pill breach-a">Medium</span></div>
+      <div class="risk-owner">CDO / CMO</div>
+      <div class="risk-stat"><span class="badge bm">Monitored</span></div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-ref">RSK-P-025</div>
+      <div class="risk-rat"><span class="badge bh">High</span></div>
+      <div class="risk-prog">PRG-08 Infra</div>
+      <div class="risk-desc">SAP ECC 6.0 mainstream support ends 2027. No S/4HANA migration decision. If feasibility study (Sep) recommends migration, insufficient lead time for FY2027 start.</div>
+      <div class="risk-lh"><span class="breach-pill breach-a">Medium</span></div>
+      <div class="risk-imp"><span class="breach-pill breach-r">High</span></div>
+      <div class="risk-owner">CIO</div>
+      <div class="risk-stat"><span class="badge bm">Monitored</span></div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-ref">RSK-P-023</div>
+      <div class="risk-rat"><span class="badge bh">High</span></div>
+      <div class="risk-prog">Portfolio</div>
+      <div class="risk-desc">FY2026 portfolio benefits at R108M&ndash;R128M vs R148M target. Board may reduce FY2027 transformation budget if H1 shortfall not recovered. CDO must demonstrate credible H2 recovery plan.</div>
+      <div class="risk-lh"><span class="breach-pill breach-a">Medium</span></div>
+      <div class="risk-imp"><span class="breach-pill breach-r">High</span></div>
+      <div class="risk-owner">CDO / CFO</div>
+      <div class="risk-stat"><span class="badge bh">In Progress</span></div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-ref">RSK-P-021</div>
+      <div class="risk-rat"><span class="badge bh">High</span></div>
+      <div class="risk-prog">PRG-03 Loyalty</div>
+      <div class="risk-desc">Loyalty DB migration retry (CHG-8860, 25 Jun) fails again. Repeat failure would cause P1 and further SLA breach, impacting loyalty programme H2 benefits and NPS.</div>
+      <div class="risk-lh"><span class="breach-pill breach-a">Medium</span></div>
+      <div class="risk-imp"><span class="breach-pill breach-r">High</span></div>
+      <div class="risk-owner">CMO / CIO</div>
+      <div class="risk-stat"><span class="badge bm">Monitored</span></div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-ref">RSK-P-019</div>
+      <div class="risk-rat"><span class="badge bh">High</span></div>
+      <div class="risk-prog">PRG-07 POPIA</div>
+      <div class="risk-desc">Vendor AI due diligence not completed for 3 API suppliers (overdue since May 2026). CTO and Legal have not delivered. Any future enforcement action by POPIA Regulator would cite this gap.</div>
+      <div class="risk-lh"><span class="breach-pill breach-r">High</span></div>
+      <div class="risk-imp"><span class="breach-pill breach-a">Medium</span></div>
+      <div class="risk-owner">CTO / Legal</div>
+      <div class="risk-stat"><span class="badge bc">Overdue</span></div>
+    </div>
+  </div>
+
+  <div class="cg" style="margin-bottom:0">
+    <div class="cb0">
+      <div class="st">Risk by programme (open count)</div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>PRG-06 AI &amp; Data</span><span class="v-r">6 risks</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:100%;background:var(--rt)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>Portfolio-wide</span><span class="v-a">4 risks</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:67%;background:var(--ot)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>PRG-07 POPIA &amp; Data Gov.</span><span class="v-a">3 risks</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:50%;background:var(--at)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>PRG-05 Clinical IT</span><span class="v-a">3 risks</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:50%;background:var(--at)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>PRG-08 Infrastructure</span><span>2 risks</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:33%;background:var(--navy)"></div></div>
+      </div>
+    </div>
+    <div class="cb0">
+      <div class="st">Risk heat map &mdash; likelihood vs impact</div>
+      <div class="tw" style="margin-bottom:0">
+        <table class="dt">
+          <thead>
+            <tr>
+              <th>Quadrant</th>
+              <th class="ctr">Risks</th>
+              <th>Representative risks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mid"><span class="badge bc">High / High &mdash; Critical</span></td>
+              <td class="ctr v-r">2</td>
+              <td class="mid">Ethics gate, GPU decision</td>
+            </tr>
+            <tr>
+              <td class="mid"><span class="badge bc">Med / High or High / Med &mdash; Critical (ExCo override)</span></td>
+              <td class="ctr v-r">3</td>
+              <td class="mid">Data quality persistence, POPIA enforcement, DC1 EoS risk</td>
+            </tr>
+            <tr>
+              <td class="mid"><span class="badge bh">Med / High or High / Med &mdash; High</span></td>
+              <td class="ctr v-a">7</td>
+              <td class="mid">Clinical AI Lead, BREACH-05 approval, change fatigue, SAP EoS, benefits shortfall, loyalty DB retry, vendor AI due diligence</td>
+            </tr>
+            <tr>
+              <td class="mid"><span class="badge bp">Medium (not itemised)</span></td>
+              <td class="ctr">6</td>
+              <td class="mid">Minor schedule slippage, supply chain benefit recovery, others</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="panel" id="p6">
+
+  <p class="intro">Programme assurance provides independent scrutiny of programme governance, delivery confidence, and benefits readiness. Assurance is provided across three lines: the ExCo Programme Office (first line &mdash; peer review), Risk &amp; Compliance (second line), and Internal Audit (third line &mdash; independent review), with External Audit / Regulator as external assurance. Assurance activities are scheduled at Gate reviews and at 6-month intervals for high-risk programmes. Assurance findings are tracked to closure by the programme director and reported to the Audit and Risk Committee (ARC).</p>
+
+  <div class="mrow">
+    <div class="mc"><div class="ml">Assurance Reviews (Q3 Plan)</div><div class="mv">5</div><div class="ms">Jul&ndash;Sep 2026</div></div>
+    <div class="mc"><div class="ml">Reviews Completed (H1)</div><div class="mv v-g">4</div><div class="ms">All on-track programmes</div></div>
+    <div class="mc"><div class="ml">Reviews Overdue</div><div class="mv v-r">2</div><div class="ms">PRG-05 &amp; PRG-07</div></div>
+    <div class="mc"><div class="ml">Open Assurance Findings</div><div class="mv v-a">2</div><div class="ms">From ASS-04; PRG-05 &amp; 07 reviews pending</div></div>
+    <div class="mc"><div class="ml">Findings Closed (H1)</div><div class="mv v-g">4</div><div class="ms">Resolved &amp; verified</div></div>
+    <div class="mc"><div class="ml">Internal Audit Items</div><div class="mv v-a">3</div><div class="ms">2 High &bull; 1 Medium</div></div>
+  </div>
+
+  <div class="ass-strip">
+    <div class="ass-hdr">
+      <span>Ass #</span>
+      <span>Programme</span>
+      <span>Scope &amp; Focus</span>
+      <span>Type</span>
+      <span class="ass-date">Date</span>
+      <span class="ass-stat">Status</span>
+    </div>
+    <div class="ass-row">
+      <div class="ass-ref">ASS-01</div>
+      <div class="ass-prog">PRG-01 Store Estate</div>
+      <div class="ass-desc">Gate 2 governance review &mdash; site selection, contractor procurement, planning. 2 minor findings (resolved).</div>
+      <div class="ass-type">EPO Peer Review</div>
+      <div class="ass-date">Feb 2026</div>
+      <div class="ass-stat"><span class="badge bg">Complete</span></div>
+    </div>
+    <div class="ass-row">
+      <div class="ass-ref">ASS-02</div>
+      <div class="ass-prog">PRG-03 Loyalty</div>
+      <div class="ass-desc">Mid-programme health check &mdash; change control, benefits, stakeholder engagement. Passed with 1 action (DB migration risk plan).</div>
+      <div class="ass-type">EPO Peer Review</div>
+      <div class="ass-date">May 2026</div>
+      <div class="ass-stat"><span class="badge bg">Complete</span></div>
+    </div>
+    <div class="ass-row">
+      <div class="ass-ref">ASS-03</div>
+      <div class="ass-prog">PRG-04 Digital</div>
+      <div class="ass-desc">Gate 3 health check &mdash; e-commerce delivery, UX testing, benefits validation. Clean pass; no findings.</div>
+      <div class="ass-type">EPO Peer Review</div>
+      <div class="ass-date">Jun 2026</div>
+      <div class="ass-stat"><span class="badge bg">Complete</span></div>
+    </div>
+    <div class="ass-row">
+      <div class="ass-ref">ASS-04</div>
+      <div class="ass-prog">Portfolio</div>
+      <div class="ass-desc">Governance maturity assessment &mdash; PRG-05 change control gap and PRG-06 risk escalation gap identified. Score: 2.8/5.</div>
+      <div class="ass-type">Internal Audit</div>
+      <div class="ass-date">May 2026</div>
+      <div class="ass-stat"><span class="badge bm">Findings open</span></div>
+    </div>
+    <div class="ass-row">
+      <div class="ass-ref">ASS-05</div>
+      <div class="ass-prog">PRG-05 Clinical IT</div>
+      <div class="ass-desc">Mid-programme review deferred due to P1 incident and data quality issues. Gate 3 pre-review required before Aug gate. Must include retrospective change control assessment.</div>
+      <div class="ass-type">EPO + Internal Audit</div>
+      <div class="ass-date"><span class="v-r">Overdue &mdash; resched. Jul</span></div>
+      <div class="ass-stat"><span class="badge bc">Overdue</span></div>
+    </div>
+    <div class="ass-row">
+      <div class="ass-ref">ASS-06</div>
+      <div class="ass-prog">PRG-07 POPIA</div>
+      <div class="ass-desc">Last assurance Dec 2025 &mdash; now 6 months overdue. Must cover Regulator findings, PAIA Manual, data quality, and benefits claims. DPO and CDO as subject matter experts.</div>
+      <div class="ass-type">Internal Audit</div>
+      <div class="ass-date"><span class="v-r">Overdue &mdash; resched. Jul</span></div>
+      <div class="ass-stat"><span class="badge bc">Overdue</span></div>
+    </div>
+    <div class="ass-row">
+      <div class="ass-ref">ASS-07</div>
+      <div class="ass-prog">PRG-06 AI &amp; Data</div>
+      <div class="ass-desc">Gate 3 pre-review: ethics framework progress, bias test completion, model register, use case delivery status, benefits recovery plan credibility.</div>
+      <div class="ass-type">EPO + CRO Review</div>
+      <div class="ass-date">Aug 2026</div>
+      <div class="ass-stat"><span class="badge bp">Planned</span></div>
+    </div>
+    <div class="ass-row">
+      <div class="ass-ref">ASS-08</div>
+      <div class="ass-prog">PRG-08 Infrastructure</div>
+      <div class="ass-desc">Gate 1 re-initiation review: DC1 switch capex, Oracle decision, SAP EoS planning, infrastructure refresh programme scope.</div>
+      <div class="ass-type">EPO Peer Review</div>
+      <div class="ass-date">Sep 2026</div>
+      <div class="ass-stat"><span class="badge bp">Planned</span></div>
+    </div>
+    <div class="ass-row">
+      <div class="ass-ref">ASS-09</div>
+      <div class="ass-prog">Portfolio</div>
+      <div class="ass-desc">Q3 portfolio governance maturity re-assessment &mdash; verify closure of PRG-05 and PRG-06 governance gaps identified in May 2026.</div>
+      <div class="ass-type">Internal Audit</div>
+      <div class="ass-date">Sep 2026</div>
+      <div class="ass-stat"><span class="badge bp">Planned</span></div>
+    </div>
+  </div>
+
+  <div class="cg" style="margin-bottom:0">
+    <div class="cb0">
+      <div class="st">Open assurance findings &mdash; from May 2026 maturity assessment (ASS-04)</div>
+      <div class="card" style="border-left-color:var(--rt)">
+        <div class="card-hdr"><span class="card-title">PRG-05 &mdash; insufficient change control rigour</span><span class="badge bc">High</span></div>
+        <div class="card-sub">5 scope additions implemented without CCP-001 approval (BREACH-05). Root cause: Programme Director treated changes as &ldquo;operational necessity&rdquo; rather than formal change requests. Remediation: retrospective approval process and mandatory CR training for all programme leads by 31 Jul.</div>
+      </div>
+      <div class="card" style="border-left-color:var(--rt)">
+        <div class="card-hdr"><span class="card-title">PRG-06 &mdash; incomplete risk escalation</span><span class="badge bc">High</span></div>
+        <div class="card-sub">CDO identified GPU and ethics framework as critical blockers internally in April but did not formally log or escalate as programme risks until May. Remediation: weekly risk log review embedded in programme cadence from June onward. Verified as in progress.</div>
+      </div>
+      <div class="card" style="border-left-color:var(--ot)">
+        <div class="card-hdr"><span class="card-title">PRG-07 &mdash; no assurance review in 6 months</span><span class="badge bh">Medium</span></div>
+        <div class="card-sub">Last formal assurance was Dec 2025. POPIA Regulator engagement intensified without corresponding governance oversight increase. Remediation: ASS-06 scheduled for July 2026 to close this gap before Gate 3.</div>
+      </div>
+    </div>
+    <div class="cb0">
+      <div class="st">Assurance findings closure status</div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>PRG-01 Store Estate (2 findings)</span><span class="v-g">2/2 closed</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:100%;background:var(--gt)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>PRG-03 Loyalty (1 finding)</span><span class="v-g">1/1 closed</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:100%;background:var(--gt)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>PRG-04 Digital (0 findings)</span><span class="v-g">N/A &mdash; clean</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:100%;background:var(--gt)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>Portfolio governance (3 findings)</span><span class="v-a">1/3 closed</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:33%;background:var(--ot)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>PRG-05 (pending Gate 3 review)</span><span class="v-a">Open</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:0%;background:var(--rt)"></div></div>
+      </div>
+      <div class="cbar-wrap">
+        <div class="cbar-label"><span>PRG-07 (pending Gate 3 review)</span><span class="v-a">Open</span></div>
+        <div class="cbar"><div class="cbar-fill" style="width:0%;background:var(--rt)"></div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="panel" id="p7">
+
+  <p class="intro">Governance decisions are items requiring formal ExCo, TIC, or Board sign-off to resolve gate review outcomes, change control breaches, or assurance findings. The ExCo Programme Office tracks all governance actions to closure and escalates overdue critical items to the portfolio sponsor within 24 hours. This tab consolidates the highest-priority governance items requiring resolution across gate reviews, change control, issues, risks, and assurance.</p>
+
+  <div class="mrow">
+    <div class="mc"><div class="ml">Governance Decisions Pending</div><div class="mv v-a">7</div><div class="ms">Awaiting sign-off</div></div>
+    <div class="mc"><div class="ml">Board / ARC Decisions</div><div class="mv v-a">3</div><div class="ms">Sep 2026</div></div>
+    <div class="mc"><div class="ml">ExCo Decisions</div><div class="mv v-a">2</div><div class="ms">8 Jul ExCo</div></div>
+    <div class="mc"><div class="ml">TIC Decisions</div><div class="mv v-a">2</div><div class="ms">16 Jul TIC</div></div>
+    <div class="mc"><div class="ml">Open Governance Actions</div><div class="mv">22</div><div class="ms">All priorities</div></div>
+    <div class="mc"><div class="ml">Overdue Actions</div><div class="mv v-r">7</div><div class="ms">Past agreed date (1 itemised below)</div></div>
+  </div>
+
+  <div class="cb">
+    <div class="st">Active governance decisions &mdash; sorted by urgency</div>
+    <div class="card" style="border-left-color:var(--rt)">
+      <div class="card-hdr">
+        <span class="card-title">GOV-DEC-01 &mdash; ExCo: PRG-05 change control breach retrospective approval</span>
+        <span class="badge bc">ExCo &mdash; 8 Jul</span>
+      </div>
+      <div class="card-sub">5 unapproved scope additions (BREACH-05, R1.1M, +9 weeks) require CIO and Programme Director retrospective approval or formal rejection and reversal. ExCo must also decide on disciplinary or process action given the governance maturity finding (ASS-04). This decision is a gating item for PRG-05 Gate 3 in August.</div>
+    </div>
+    <div class="card" style="border-left-color:var(--rt)">
+      <div class="card-hdr">
+        <span class="card-title">GOV-DEC-02 &mdash; ExCo: PRG-05 Clinical IT replanning approval</span>
+        <span class="badge bc">ExCo &mdash; 8 Jul</span>
+      </div>
+      <div class="card-sub">Revised H2 milestone plan and benefits forecast must be approved by ExCo, with CFO co-sign on the revised benefits projection. This determines whether PRG-05 full-year target is revised downward or whether ExCo expects the original R18M target to be recovered.</div>
+    </div>
+    <div class="card" style="border-left-color:var(--ot)">
+      <div class="card-hdr">
+        <span class="card-title">GOV-DEC-03 &mdash; TIC: CR-2026-041 GPU scope addition (PRG-06)</span>
+        <span class="badge bh">TIC &mdash; 16 Jul</span>
+      </div>
+      <div class="card-sub">Major change request for Azure GPU cluster (R620k p.a.) requires TIC approval per CCP-001 thresholds. This is the formal governance counterpart to the CTO infrastructure decision (DEC-001 on the Transformation Portfolio dashboard). TIC sign-off needed regardless of CTO technical approval.</div>
+    </div>
+    <div class="card" style="border-left-color:var(--ot)">
+      <div class="card-hdr">
+        <span class="card-title">GOV-DEC-04 &mdash; TIC: CR-2026-039 Clinical Analytics NHIA module (PRG-05)</span>
+        <span class="badge bh">TIC &mdash; 16 Jul</span>
+      </div>
+      <div class="card-sub">Major change request (R480k, +5 weeks) for NHIA reporting module addition. Given the PRG-05 change control breach already under review, TIC will scrutinise this request closely as a test of improved process discipline.</div>
+    </div>
+    <div class="card" style="border-left-color:var(--ot)">
+      <div class="card-hdr">
+        <span class="card-title">GOV-DEC-05 &mdash; Board: CR-2026-038 DC1 switch capex (PRG-08)</span>
+        <span class="badge bh">Board &mdash; Sep 2026</span>
+      </div>
+      <div class="card-sub">Exceptional change request (R1.4M capex) requires Board approval. This is the formal change control gate for the DC1 core switch replacement already tracked as a critical risk (RSK-P-033) and issue (ISS-PRG-071). Capex motivation due to CFO by 10 Jul for Sep Board.</div>
+    </div>
+    <div class="card" style="border-left-color:var(--at)">
+      <div class="card-hdr">
+        <span class="card-title">GOV-DEC-06 &mdash; ARC: PRG-06 and PRG-05 Gate 3 conditional pass terms</span>
+        <span class="badge bm">Board ARC &mdash; Sep 2026</span>
+      </div>
+      <div class="card-sub">Both Gate 3 reviews (Aug 2026) are expected to result in conditional passes given current criteria gaps. ARC to formally endorse the conditions attached (recovery plans, milestone commitments) and confirm portfolio continues with Board confidence.</div>
+    </div>
+    <div class="card" style="border-left-color:var(--at)">
+      <div class="card-hdr">
+        <span class="card-title">GOV-DEC-07 &mdash; ARC: Q3 governance maturity re-assessment outcome</span>
+        <span class="badge bm">Board ARC &mdash; Sep 2026</span>
+      </div>
+      <div class="card-sub">ASS-09 re-assessment will confirm whether PRG-05 and PRG-06 governance gaps identified in May have closed. If gaps persist, ARC may require additional independent oversight or process intervention for these two programmes.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="st">Governance decision authority RACI</div>
+    <div class="tw" style="margin-bottom:0">
+      <table class="raci-table">
+        <thead>
+          <tr>
+            <td class="raci-hdr" style="text-align:left;width:200px">Decision Type</td>
+            <td class="raci-hdr">CEO</td>
+            <td class="raci-hdr">CIO</td>
+            <td class="raci-hdr">CFO</td>
+            <td class="raci-hdr">CRO</td>
+            <td class="raci-hdr">ExCo</td>
+            <td class="raci-hdr">Board ARC</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="raci-lbl">Gate review outcome / pass-fail</td>
+            <td class="raci-n">I</td><td class="raci-g">A</td><td class="raci-g">A</td>
+            <td class="raci-b">C</td><td class="raci-g">R</td><td class="raci-n">I</td>
+          </tr>
+          <tr>
+            <td class="raci-lbl">Minor change request approval</td>
+            <td class="raci-n">I</td><td class="raci-b">C</td><td class="raci-n">I</td>
+            <td class="raci-n">I</td><td class="raci-g">A/R</td><td class="raci-n">I</td>
+          </tr>
+          <tr>
+            <td class="raci-lbl">Major change request approval</td>
+            <td class="raci-n">I</td><td class="raci-g">A</td><td class="raci-g">A</td>
+            <td class="raci-b">C</td><td class="raci-g">R</td><td class="raci-n">I</td>
+          </tr>
+          <tr>
+            <td class="raci-lbl">Exceptional change / Board capex</td>
+            <td class="raci-b">C</td><td class="raci-b">C</td><td class="raci-g">A</td>
+            <td class="raci-b">C</td><td class="raci-g">R</td><td class="raci-g">A</td>
+          </tr>
+          <tr>
+            <td class="raci-lbl">Change control breach resolution</td>
+            <td class="raci-n">I</td><td class="raci-g">A/R</td><td class="raci-b">C</td>
+            <td class="raci-b">C</td><td class="raci-g">A</td><td class="raci-n">I</td>
+          </tr>
+          <tr>
+            <td class="raci-lbl">Critical risk acceptance / escalation</td>
+            <td class="raci-g">A</td><td class="raci-b">C</td><td class="raci-b">C</td>
+            <td class="raci-g">A/R</td><td class="raci-b">C</td><td class="raci-n">I</td>
+          </tr>
+          <tr>
+            <td class="raci-lbl">Assurance finding closure sign-off</td>
+            <td class="raci-n">I</td><td class="raci-b">C</td><td class="raci-n">I</td>
+            <td class="raci-b">C</td><td class="raci-g">A/R</td><td class="raci-b">C</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="cb0">
+    <div class="st">Governance actions register &mdash; June 2026 (critical and high items)</div>
+    <div class="act-row">
+      <div class="act-ref">GOV-A01</div>
+      <div class="act-body">
+        <div class="act-title">Resolve PRG-05 change control breach &mdash; retrospective decision at 8 Jul ExCo (GOV-DEC-01)</div>
+        <div class="act-desc">CIO to prepare retrospective approval paper covering all 5 BREACH-05 items with individual recommendation (approve / reject and reverse) for each. Programme Director to confirm technical reversibility of each change if rejection is recommended. ExCo decision required before PRG-05 can proceed to Gate 3 preparation.</div>
+        <div class="act-meta"><span class="badge bc">Critical</span><span class="badge bm">Due: 8 Jul</span><span>CIO / Prog Dir</span></div>
+      </div>
+    </div>
+    <div class="act-row">
+      <div class="act-ref">GOV-A02</div>
+      <div class="act-body">
+        <div class="act-title">Schedule PRG-05 and PRG-07 overdue assurance reviews (ASS-05, ASS-06)</div>
+        <div class="act-desc">ExCo PMO to confirm review dates with Internal Audit by 30 Jun. PRG-05 review must include retrospective change control assessment as input to GOV-DEC-01. PRG-07 review must assess Regulator engagement and PAIA Manual status ahead of Gate 3.</div>
+        <div class="act-meta"><span class="badge bc">Critical</span><span class="badge bm">Schedule by: 30 Jun</span><span>ExCo PMO / Internal Audit</span></div>
+      </div>
+    </div>
+    <div class="act-row">
+      <div class="act-ref">GOV-A03</div>
+      <div class="act-body">
+        <div class="act-title">Prepare DC1 switch Board capex motivation (GOV-DEC-05)</div>
+        <div class="act-desc">CTO and L. Mthembu to finalise Cisco quote and technical scope. CFO to receive complete capex motivation by 10 Jul for September Board submission. This single action resolves issue ISS-PRG-071 and risk RSK-P-033 simultaneously if approved.</div>
+        <div class="act-meta"><span class="badge bc">Critical</span><span class="badge bm">Due: 10 Jul</span><span>CTO / CFO</span></div>
+      </div>
+    </div>
+    <div class="act-row">
+      <div class="act-ref">GOV-A04</div>
+      <div class="act-body">
+        <div class="act-title">Mandatory change control training for all programme leads (remediation for ASS-04 finding 1)</div>
+        <div class="act-desc">ExCo PMO to deliver CCP-001 refresher training to all 8 Programme Directors and their deputies by 31 Jul. Training to cover the BREACH-05 case study as a worked example. Attendance to be tracked and reported at August governance review.</div>
+        <div class="act-meta"><span class="badge bh">High</span><span class="badge bm">Due: 31 Jul</span><span>ExCo PMO</span></div>
+      </div>
+    </div>
+    <div class="act-row">
+      <div class="act-ref">GOV-A05</div>
+      <div class="act-body">
+        <div class="act-title">Embed weekly risk log review in PRG-06 programme cadence (remediation for ASS-04 finding 2)</div>
+        <div class="act-desc">CDO to confirm weekly risk review is operating as agreed in May remediation plan. ExCo PMO to verify via attendance at 2 consecutive weekly sessions in July. Verification outcome feeds into ASS-09 re-assessment in September.</div>
+        <div class="act-meta"><span class="badge bh">High</span><span class="badge bm">Verify by: 31 Jul</span><span>CDO / ExCo PMO</span></div>
+      </div>
+    </div>
+    <div class="act-row">
+      <div class="act-ref">GOV-A06</div>
+      <div class="act-body">
+        <div class="act-title">Vendor AI due diligence completion &mdash; resolve overdue RSK-P-019 (PRG-07) &mdash; <span class="badge bc">Overdue</span></div>
+        <div class="act-desc">Was due May 2026. CTO and Legal to complete vendor AI risk assessments for OpenAI, Azure Cognitive Services, and Anthropic. Overdue status is itself an assurance and governance exposure cited in risk register. Extended deadline 31 Jul 2026, aligned to the related action on the AI Operational Risk dashboard.</div>
+        <div class="act-meta"><span class="badge bh">High</span><span class="badge bc">Overdue: May 2026</span><span>CTO / Legal</span></div>
+      </div>
+    </div>
+    <div class="act-row">
+      <div class="act-ref">GOV-A07</div>
+      <div class="act-body">
+        <div class="act-title">Prepare Gate 3 conditional pass terms for PRG-05 and PRG-06 (GOV-DEC-06)</div>
+        <div class="act-desc">ExCo PMO to draft conditional pass criteria for both August gate reviews ahead of time: specific recovery milestones, revised benefits targets, and review checkpoints. Draft terms to be circulated to CIO, CDO, and CFO for input by 15 Jul, ahead of the Aug gate reviews themselves.</div>
+        <div class="act-meta"><span class="badge bh">High</span><span class="badge bm">Draft by: 15 Jul</span><span>ExCo PMO</span></div>
+      </div>
+    </div>
+    <div class="act-row">
+      <div class="act-ref">GOV-A08</div>
+      <div class="act-body">
+        <div class="act-title">Confirm September Board ARC governance agenda items (GOV-DEC-06, GOV-DEC-07)</div>
+        <div class="act-desc">ExCo PMO and Company Secretary to confirm September ARC agenda includes: DC1 switch capex decision, Gate 3 conditional pass endorsements for PRG-05 and PRG-06, and Q3 governance maturity re-assessment outcome. Board pack preparation to commence 14 Aug.</div>
+        <div class="act-meta"><span class="badge bm">Medium</span><span class="badge bm">Agenda: 14 Aug</span><span>ExCo PMO</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<section class="portfolio-about" id="about-this-portfolio">
+  <h2>About This Portfolio</h2>
+  <p><strong>Prepared by:</strong> Divan Gerber &mdash; Independent Portfolio Exercise.</p>
+  <p>This page is part of a self-directed learning project built to demonstrate practical Governance, Risk &amp; Compliance and IT Audit capability. &ldquo;MedRetail Group South Africa&rdquo; and its governance structures are fictional constructs created for this exercise. No real organization, department, employee, board, or confidential data is represented here, and the dashboard is a static design prototype, not a live system. Real company, product, regulator and law names (listed in the banner above) are scenario context only; every gate result, finding, breach and decision attributed to them is invented and says nothing about them. Programme gate outcomes, change requests, issues, risks, assurance reviews, named people and committee decisions shown are simulated scenario content, and no real governance results are claimed. This is not a role or office Divan Gerber has held.</p>
+</section>
+
+</body>
+</html>
